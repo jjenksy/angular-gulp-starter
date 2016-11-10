@@ -1,6 +1,9 @@
 /**
- * Created by jjenkins on 11/9/2016.
+ * Created by
+ *
  */
+
+"use strict";
 const gulp = require('gulp');
 const args = require('yargs').argv;
 //require are configuration object
@@ -9,9 +12,22 @@ const config = require('./gulp.config')();
 const $ = require('gulp-load-plugins')({lazy: true});
 //delete file
 const del = require('del');
+//the port is either the arg from the command line of the config port
+const port = process.env.PORT || config.defaultPort;
 
+const browserSync = require('browser-sync');
 
 // setup gulp task
+gulp.task('help', function(){
+
+    $.taskListing();
+
+    log('You would not need help if you were using WebStorm,' +
+        ' you could have just opened the Gulp window.');
+
+});
+//set the default task as help
+gulp.task('default', ['help']);
 /**
  * Telling gulp to read all js root and src js files
  * and pipe them into jscs and jshint
@@ -34,7 +50,7 @@ gulp.task('vet', function () {
  * the clean-styles task will run before the styles task
  * because we passed it in as an array parameter
  */
-gulp.task('styles', function () {
+gulp.task('styles',['clean-styles'], function () {
     log('Compiling Less ---> CSS');
 
     return gulp
@@ -45,23 +61,222 @@ gulp.task('styles', function () {
         .pipe(gulp.dest(config.temp));
 });
 
+//font-awesome build step
+gulp.task('images',['clean-images'], function () {
+    log('Copying and compressing the images');
+
+    return gulp
+        .src(config.images)
+        .pipe($.imagemin({optimizationLevel: 4}))
+        .pipe(gulp.dest(config.build + 'images'));
+});
+
+//images build step
+gulp.task('fonts', ['clean-fonts'], function () {
+    log('Copying the fonts...');
+    return gulp.src(config.fonts)
+        .pipe(gulp.dest(config.build + 'fonts'));
+});
+//clean all build files
+gulp.task('clean', function (done) {
+    const deleteconfig = [].concat(config.build, config.temp);
+
+    log('Cleaning '+ $.util.colors.blue(deleteconfig));
+    //delete the files
+    del(deleteconfig, done);
+});
 //task to cleanup styles
 gulp.task('clean-styles', function (done) {
     const files = config.temp + '**/*.css';
     //delete the files
-    cleanPath(files, done);
+    clean(files, done);
 });
 
+//task to cleanup fonts
+gulp.task('clean-fonts', function (done) {
+    const files = config.build + 'fonts/**/*.*';
+    //delete the files
+    clean(files, done);
+});
+
+//task to cleanup images
+gulp.task('clean-images', function (done) {
+    const files = config.build + 'images/**/*.*';
+    //delete the files
+    clean(files, done);
+});
+
+gulp.task('clean-code', function(done) {
+    const files = [].concat(
+        config.temp + '**/*.js',
+        config.build + '**/*.html',
+        config.build + 'js/**/*.js'
+    );
+    clean(files, done);
+});
+//watches the less css file for changes
 gulp.task('less-watcher', function () {
     //watch the less file and update the css
    gulp.watch([config.less],['styles']);
 });
+//caches the html and minifies it
+gulp.task('templatecache', ['clean-code'], function() {
+    log('Creating AngularJS $templateCache');
+
+    return gulp
+        .src(config.htmltemplates)
+       .pipe($.minifyHtml({empty: true}))
+        //run the gulp-angular-tempcache plugin
+        .pipe($.angularTemplatecache(
+            config.templateCache.file,
+            config.templateCache.options
+        ))
+        .pipe(gulp.dest(config.temp));
+});
+
+
+/**
+ * Wire in bower and Js file dependencies
+ * this can be ran manually and also runs every time
+ * a bower install or bower uninstall is perforemed
+ * this method does not complile the less file
+ */
+gulp.task('wiredep', function() {
+    const options = config.getWiredepDefaultOptions();
+    const wiredep = require('wiredep').stream;
+    log('Wire up the bower css js and our app js into the html');
+    return gulp
+        .src(config.index)
+        .pipe(wiredep(options))
+        .pipe($.inject(gulp.src(config.js)))
+        .pipe(gulp.dest(config.client));
+});
+
+
+/**
+ * This methid runs wiredep to inject all the bower and scripts and compiles the customm css
+ * and injects the custom stylesheet
+ */
+gulp.task('inject', ['wiredep', 'styles'], function() {
+    log('Wire up the app css into the html, and call wiredep ');
+
+    return gulp
+        .src(config.index)
+        .pipe($.inject(gulp.src(config.css)))
+        .pipe(gulp.dest(config.client));
+});
+
+/**
+ * serve-dev this task restarts server on changes to dev files
+ */
+gulp.task('serve-dev',['inject'], function () {
+    //toggle is dev to build client code
+    const isDev = true;
+
+    const nodeOptions = {
+        script: config.nodeServer,
+        delayTime: 1,
+        env: {
+            'PORT': port,
+            'NODE_ENV': isDev ? 'dev' : 'build'
+        },
+        watch: [config.server]//the files to watch
+    };
+
+    /**
+     * nodemon will watch the files in the directory in which nodemon was started,
+     * and if any files change,
+     * nodemon will automatically restart your node application.
+     */
+    return $.nodemon(nodeOptions)
+        .on('restart',['vet'], function(ev) {
+            log('*** nodemon restarted');
+            log('files changed on restart:\n' + ev);
+            //make sure browsersync reloads itself
+            setTimeout(function () {
+                browserSync.notify('reloading now');
+                browserSync.reload({stream: false});
+            }, config.browserReloadDelay);
+        })
+        .on('start', function() {
+            log('*** nodemon started');
+            //call the browsersync function
+            startBrowserSync();
+        })
+        .on('crash', function(err) {
+            log('*** nodemon crashed: script crashed for some reason ' + err);
+        })
+        .on('exit', function() {
+            log('*** nodemon exited cleanly');
+        });
+});
 
 ///////////////////
 
-function cleanPath(path, done) {
+/**
+ * Change event logs out what changes
+ * @param event
+ */
+function changeEvent(event) {
+    //strip down the file path with a regex
+    const srcPattern = new RegExp('/.*(?=/' + config.source + ')/');
+    log('File ' + event.path.replace(srcPattern, '') + ' ' + event.type);
+}
+
+/**
+ * This function uses the browser-sync node plugin
+ * https://www.browsersync.io/
+ * This insures the browser stays in sync not needing to refresh
+ */
+function startBrowserSync() {
+    const options = {
+        proxy: 'localhost:' + port,
+        port: 3000,
+        files: [ //the files we are watching and re-serving up
+            config.client + '**/*.*',
+            '!' + config.less,
+            config.temp + '**/*.css'
+        ],
+        //ghostmode tracks these settings
+        ghostMode: {
+            clicks: true,
+            location: false,
+            forms: true,
+            scroll: true
+        },
+        injectChanges: true,//it will inject changes instead of reloading
+        logFileChanges: true,
+        logLevel: 'debug',
+        logPrefix: 'gulp-patterns',
+        notify: true,
+        reloadDelay: 0 //1000
+    };
+
+    if (args.nosync || browserSync.active) {
+        return;
+    }
+
+    log('Starting browser-sync on port ' + port);
+    //if the less changes convert it to css
+    gulp.watch([config.less], ['styles'])
+        .on('change', function(event) { changeEvent(event); });
+
+
+
+    browserSync(options);
+}
+function clean(path, done) {
     log('Cleaning: ' + $.util.colors.blue(path));
-    del(path, done);
+
+    /**
+     * Del returns a promise that we can resolve by thening it
+     */
+    del(path)
+        .then(paths => {
+            log('The path for deletion of file ' + paths);
+            done();
+        });
+
 }
 function log(msg) {
     if(typeof(msg) === 'object'){
