@@ -14,6 +14,11 @@ var routes;
 
 var environment = process.env.NODE_ENV;
 
+
+console.log('Set the enviroment to : '+ environment);
+console.log('Set the port to : '+ port);
+
+
 app.use(favicon(__dirname + '/favicon.ico'));
 app.use(bodyParser.urlencoded({
     extended: true

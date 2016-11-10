@@ -157,7 +157,7 @@ gulp.task('wiredep', function() {
  * This methid runs wiredep to inject all the bower and scripts and compiles the customm css
  * and injects the custom stylesheet
  */
-gulp.task('inject', ['wiredep', 'styles'], function() {
+gulp.task('inject', ['wiredep', 'styles', 'templatecache'], function() {
     log('Wire up the app css into the html, and call wiredep ');
 
     return gulp
@@ -167,52 +167,91 @@ gulp.task('inject', ['wiredep', 'styles'], function() {
 });
 
 /**
+ * This task optimizes all are js files into one and
+ * optomizes html and css as well this uses the useref plugin
+ * https://www.npmjs.com/package/gulp-useref
+ * This gets the templates from the template cache and injects them into
+ * the index.html
+ */
+gulp.task('optimize', ['inject', 'fonts', 'images'], function() {
+    const templateCache = config.temp + config.templateCache.file;
+    const cssFilter = $.filter('**/*.css', {restore: true});
+    const jsFilter = $.filter('**/*.js', {restore: true});
+
+    log('Optimizing the Javascript, CSS and HTML');
+
+    return gulp
+        .src(config.index)
+        .pipe($.plumber())
+        .pipe($.inject(
+            gulp.src(templateCache, {read: false}), {
+                starttag: '<!-- inject:templates:js -->'
+            }))
+
+        .pipe($.useref({searchPath: './'}))
+        .pipe(cssFilter)
+        .pipe($.csso())
+        .pipe(cssFilter.restore)
+        .pipe(jsFilter)
+        .pipe($.uglify())
+        .pipe(jsFilter.restore)
+        .pipe(gulp.dest(config.build));
+});
+
+/**
+ * Starts the serve in build mode
+ */
+gulp.task('serve-build', ['optimize'], function() {
+    serve(false /* isDev */);
+});
+/**
  * serve-dev this task restarts server on changes to dev files
  */
-gulp.task('serve-dev',['inject'], function () {
-    //toggle is dev to build client code
-    const isDev = true;
+gulp.task('serve-dev', ['inject'], function() {
+    serve(true /* isDev */);
+});
 
-    const nodeOptions = {
+
+
+///////////////////
+
+/**
+ * Function to start the server in dev or build mode depending upon the
+ * selected task
+ * @param isDev
+ * @returns {*}
+ */
+function serve(isDev) {
+    var nodeOptions = {
         script: config.nodeServer,
         delayTime: 1,
         env: {
             'PORT': port,
             'NODE_ENV': isDev ? 'dev' : 'build'
         },
-        watch: [config.server]//the files to watch
+        watch: [config.server]
     };
 
-    /**
-     * nodemon will watch the files in the directory in which nodemon was started,
-     * and if any files change,
-     * nodemon will automatically restart your node application.
-     */
     return $.nodemon(nodeOptions)
-        .on('restart',['vet'], function(ev) {
+        .on('restart', function(ev) {
             log('*** nodemon restarted');
             log('files changed on restart:\n' + ev);
-            //make sure browsersync reloads itself
-            setTimeout(function () {
-                browserSync.notify('reloading now');
+            setTimeout(function() {
+                browserSync.notify('reloading now ...');
                 browserSync.reload({stream: false});
             }, config.browserReloadDelay);
         })
         .on('start', function() {
             log('*** nodemon started');
-            //call the browsersync function
-            startBrowserSync();
+            startBrowserSync(isDev);
         })
-        .on('crash', function(err) {
-            log('*** nodemon crashed: script crashed for some reason ' + err);
+        .on('crash', function() {
+            log('*** nodemon crashed: script crashed for some reason');
         })
         .on('exit', function() {
             log('*** nodemon exited cleanly');
         });
-});
-
-///////////////////
-
+}
 /**
  * Change event logs out what changes
  * @param event

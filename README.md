@@ -13,3 +13,13 @@ $ bower install
 $ npm start
 ```
 
+##Running Gulp Commands
+
+```bash
+$ gulp serve-build
+$ gulp serve-dev
+```
+The serve-build gulp tasks minifies, concatenates and injects the links into the new index.html 
+file under the build area. It then start the Node server @src/server/app.js in build mode. 
+
+The serve-dev starts up the server in dev mode serving up the dev files
