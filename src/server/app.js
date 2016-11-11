@@ -31,7 +31,19 @@ var routes;
 var environment = process.env.NODE_ENV;
 
 
-
+/**
+ * Bind application-level middleware to an instance of the app object by using
+ * the app.use() and app.METHOD() functions, where METHOD is the HTTP method of
+ * the request that the middleware function handles (such as GET, PUT, or POST)
+ * in lowercase. This example shows a middleware function with no mount path.
+ * The function is executed every time the app receives a request.
+ * var app = express()
+ *
+ * app.use(function (req, res, next) {
+ * console.log('Time:', Date.now())
+ * next()
+ * })
+ */
 //the location of the favicon
 app.use(favicon(__dirname + '/favicon.ico'));
 // parse application/x-www-form-urlencoded
@@ -45,6 +57,9 @@ app.use(logger('dev'));
 app.use(cors());
 app.use(errorHandler.init);
 
+/**
+ * The routes we are using for rest API
+ */
 routes = require('./routes/index')(app);
 
 console.log('About to crank up node');
@@ -58,6 +73,13 @@ app.get('/ping', function(req, res, next) {
 /**
  * This swtich statement moves us between
  * development files and build files
+ * To serve static files such as images, CSS files, and JavaScript files,
+ * the express.static built-in middleware function in Express.
+ * Pass the name of the directory that contains the static assets
+ * to the express.static middleware function to start serving the files
+ * For example, use the following code to serve images,
+ * CSS files, and JavaScript files in a directory named public:
+ * app.use(express.static('public'))
  */
 switch (environment) {
     case 'build':
