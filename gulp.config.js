@@ -8,6 +8,7 @@ module.exports = function () {
     const clientApp = client + 'app/';
     const temp = './.tmp/';
     const server = './src/server/';
+    const root ='./';
     const config = {
 
         /**
@@ -35,6 +36,7 @@ module.exports = function () {
         ],
         server: server,
         temp: temp,
+        root: root,
         /**
          * optimized files
          */
@@ -67,6 +69,10 @@ module.exports = function () {
             directory: './bower_components/',
             ignorePath: '../..'
         },
+        packages : [
+            './package.json',
+            './bower.json'
+        ],
 
         /**
          * Node settings

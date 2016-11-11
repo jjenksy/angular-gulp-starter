@@ -252,7 +252,7 @@ gulp.task('bump', function () {
     return gulp
         .src(config.packages)
         .pipe($.print())
-        .pipe($.bump(options))
+        .pipe(gulpBump(options))
         .pipe(gulp.dest(config.root));
 
 });

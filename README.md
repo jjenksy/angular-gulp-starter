@@ -27,3 +27,8 @@ file under the build area. It then start the Node server @src/server/app.js in b
 The serve-dev starts up the server in dev mode serving up the dev files
 
 Bump increments the major, minor, patch and pre-release version numbers. 
+* --type=pre will bump the prerelease version *.*.*-x
+ * --type=patch or no flag will bump the patch version *.*.x
+ * --type=minor will bump the minor version *.x.*
+ * --type=major will bump the major version x.*.*
+ * --version=1.2.3 will bump to a specific version and ignore other flags
