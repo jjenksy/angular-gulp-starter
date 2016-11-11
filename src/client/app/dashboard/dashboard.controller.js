@@ -1,10 +1,9 @@
 (function() {
     'use strict';
-
     angular
         .module('app.dashboard')
         .controller('Dashboard', Dashboard);
-
+    //tell angular to use inject to match thee below names with the function variable names
     Dashboard.$inject = ['$state', 'dataservice', 'logger'];
     function Dashboard($state, dataservice, logger) {
         var vm = this;

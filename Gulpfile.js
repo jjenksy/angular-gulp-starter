@@ -1,6 +1,6 @@
 /**
  * Created by
- *
+ *  John Jenkins
  */
 
 "use strict";
@@ -16,6 +16,14 @@ const del = require('del');
 const port = process.env.PORT || config.defaultPort;
 
 const browserSync = require('browser-sync');
+
+const ngannotate = require('gulp-ng-annotate');
+//update revision numbers and replace them so browser is not caching old
+//client files
+const gulpRev = require('gulp-rev');
+const gulpRevReplace = require('gulp-rev-replace');
+//increment the versions
+const gulpBump = require('gulp-bump');
 
 // setup gulp task
 gulp.task('help', function(){
@@ -175,8 +183,21 @@ gulp.task('inject', ['wiredep', 'styles', 'templatecache'], function() {
  */
 gulp.task('optimize', ['inject', 'fonts', 'images'], function() {
     const templateCache = config.temp + config.templateCache.file;
+    //use gulp filter to get all the css and javascript
+    /**
+     * Enables you to work on a subset of the original files by filtering them using globbing.
+     * When you're done and want all the original files back you just use the restore stream.
+     */
     const cssFilter = $.filter('**/*.css', {restore: true});
-    const jsFilter = $.filter('**/*.js', {restore: true});
+    /**
+     * We split the filter into two diffrent varibles so we
+     * could use ngannotate gulp plug in to apply any  angularjs dependency
+     * injection annotations with ng-annotate so uglifly does not break
+     */
+    //filter for the 3rd party libraries
+    const jsLibFilter = $.filter('**/'+config.optimized.lib, {restore: true});
+    //filter for the custom js code
+    const jsAppFilter = $.filter('**/'+config.optimized.app, {restore: true});
 
     log('Optimizing the Javascript, CSS and HTML');
 
@@ -187,17 +208,54 @@ gulp.task('optimize', ['inject', 'fonts', 'images'], function() {
             gulp.src(templateCache, {read: false}), {
                 starttag: '<!-- inject:templates:js -->'
             }))
-
         .pipe($.useref({searchPath: './'}))
         .pipe(cssFilter)
-        .pipe($.csso())
+        .pipe($.csso())//css optimizer helps to optimize and minimize css
         .pipe(cssFilter.restore)
-        .pipe(jsFilter)
-        .pipe($.uglify())
-        .pipe(jsFilter.restore)
+        .pipe(jsLibFilter)
+        .pipe($.uglify())//minify and mangle the javascript
+        .pipe(jsLibFilter.restore)
+        .pipe(jsAppFilter)
+        //add the annotations
+        .pipe(ngannotate())
+        .pipe($.uglify())//minify and mangle the javascript
+        .pipe(jsAppFilter.restore)
+        //do the revisions
+        .pipe(gulpRev())//app.js name changed here
+        .pipe(gulpRevReplace())//renames inside the html with new named revision
+        .pipe(gulp.dest(config.build))
+        .pipe(gulpRev.manifest())//write out the changes to a manifest in build file
         .pipe(gulp.dest(config.build));
 });
+/**
+ * Bump the version
+ * --type=pre will bump the prerelease version *.*.*-x
+ * --type=patch or no flag will bump the patch version *.*.x
+ * --type=minor will bump the minor version *.x.*
+ * --type=major will bump the major version x.*.*
+ * --version=1.2.3 will bump to a specific version and ignore other flags
+ */
+gulp.task('bump', function () {
+    let msg = 'Bumping versions';
+    let type = args.type;
+    let version = args.version;
+    let options = {};
+    if (version) {
+        options.version = version;
+        msg += ' to ' + version;
+    } else {
+        options.type = type;
+        msg += ' for a ' + type;
+    }
+    log(msg);
 
+    return gulp
+        .src(config.packages)
+        .pipe($.print())
+        .pipe($.bump(options))
+        .pipe(gulp.dest(config.root));
+
+});
 /**
  * Starts the serve in build mode
  */
