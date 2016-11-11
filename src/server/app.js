@@ -59,6 +59,7 @@ app.use(errorHandler.init);
 
 /**
  * The routes we are using for rest API
+ * see index.js for deta
  */
 routes = require('./routes/index')(app);
 
