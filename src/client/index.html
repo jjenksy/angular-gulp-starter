@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="app">
+<html>
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
@@ -27,83 +27,47 @@
     <!-- endbuild -->
 
 </head>
-<body>
-   <table>
-       <thead>
-       <tr>
-           <td>image</td>
-           <td>Product</td>
-           <td>Code</td>
-           <td>Available</td>
-           <td>Price</td>
-       </tr>
-       </thead>
-       <tbody>
-       <!--repeat the element in each product-->
-       <tr ng-repeat="product in products">
-           <td>
-               <img ng-src="{{product.imageUrl}}"
-                    title="{{product.productName}}">
-           </td>
-           <td>{{product.productName}}</td>
-           <td>{{product.productCode}}</td>
-           <td>{{product.releaseDate}}</td>
-           <td>{{product.price}}</td>
-       </tr>
-       </tbody>
-   </table>
+<body ng-app="app">
+<div class="panel panel-primary">
+    <div class="panel-heading"
+         style="font-size:large">Product
+        List
+    </div>
 
-    <!-- build:js js/lib.js -->
-    <!-- bower:js -->
-    <script src="/bower_components/jquery/dist/jquery.js"></script>
-    <script src="/bower_components/angular/angular.js"></script>
-    <script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
-    <script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="/bower_components/moment/moment.js"></script>
-    <script src="/bower_components/angular-route/angular-route.js"></script>
-    <script src="/bower_components/toastr/toastr.js"></script>
-    <script src="/bower_components/angular-animate/angular-animate.js"></script>
-    <script src="/bower_components/extras.angular.plus/ngplus-overlay.js"></script>
-    <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-    <!-- endbower -->
-    <!-- endbuild -->
+    <div class="panel-body">
+        <table class="table" ng-controller="ProductListCtrl as vm">
 
-    <!-- build:js js/app.js-->
-    <!-- inject:js -->
-
-
-
-
-
-
-    <script src="/src/client/app/app.js"></script>
-
-
-
-
-
-
-    <script src="/src/client/app/products/productListCtlr.js"></script>
-
-
-
-
-
-
-    <script src="/src/client/app/blocks/http/httpRequester.js"></script>
-
-
-
-
-
-
-    <!-- endinject -->
-
-    <!-- inject:templates:js -->
-
-    <!-- endinject -->
-
-    <!-- endbuild -->
-
+            <thead>
+            <tr>
+                <td>
+                    <button type="button"
+                            class="btn btn-primary"
+                            ng-click="vm.toggleImage()">
+                        {{vm.showImage ? "Hide" : "Show"}} Image
+                    </button>
+                </td>
+                <td>Product</td>
+                <td>Code</td>
+                <td>Available</td>
+                <td>Price</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="product in vm.products">
+                <td>
+                    <img ng-if="vm.showImage"
+                         ng-src="{{product.imageUrl}}"
+                         style="width:50px;margin:2px"
+                         title="{{product.productName}}">
+                </td>
+                <td>{{ product.productName}}</td>
+                <td>{{ product.productCode }}</td>
+                <td>{{ product.releaseDate }}</td>
+                <td>{{ product.price | currency }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 </body>
 </html>

@@ -179,7 +179,7 @@ gulp.task('inject', ['wiredep', 'styles', 'templatecache'], function() {
  * optomizes html and css as well this uses the useref plugin
  * https://www.npmjs.com/package/gulp-useref
  * This gets the templates from the template cache and injects them into
- * the index.html
+ * the default.html
  */
 gulp.task('optimize', ['inject', 'fonts', 'images'], function() {
     const templateCache = config.temp + config.templateCache.file;
