@@ -32,3 +32,7 @@ Bump increments the major, minor, patch and pre-release version numbers.
  * --type=minor will bump the minor version *.x.*
  * --type=major will bump the major version x.*.*
  * --version=1.2.3 will bump to a specific version and ignore other flags
+
+
+
+

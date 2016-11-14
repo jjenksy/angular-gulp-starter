@@ -60,7 +60,7 @@ module.exports = function () {
          */
         browserReloadDelay: 1000,
         //location of less file
-        less: client + 'styles/styles.less',
+        less: client + '/styles/styles.less',
         /**
          * Bower and npm locations
          */
