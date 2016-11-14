@@ -6,7 +6,7 @@
 
 
    var ProductListCtrl = function() {
-       
+
        //define the model by referencing this keyword
         var vm = this;
         vm.products = [
