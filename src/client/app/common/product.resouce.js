@@ -9,7 +9,6 @@
 
     function productResource() {
         //returns a resource object with the url of the
-        //products
         return $resource("/api/products/:productId");
     }
 
