@@ -3,7 +3,7 @@
  *  John Jenkins
  */
 
-"use strict";
+'use strict';
 const gulp = require('gulp');
 const args = require('yargs').argv;
 //require are configuration object
@@ -26,7 +26,7 @@ const gulpRevReplace = require('gulp-rev-replace');
 const gulpBump = require('gulp-bump');
 
 // setup gulp task
-gulp.task('help', function(){
+gulp.task('help', function() {
 
     $.taskListing();
 
@@ -89,7 +89,7 @@ gulp.task('fonts', ['clean-fonts'], function () {
 gulp.task('clean', function (done) {
     const deleteconfig = [].concat(config.build, config.temp);
 
-    log('Cleaning '+ $.util.colors.blue(deleteconfig));
+    log('Cleaning ' + $.util.colors.blue(deleteconfig));
     //delete the files
     del(deleteconfig, done);
 });
@@ -125,7 +125,7 @@ gulp.task('clean-code', function(done) {
 //watches the less css file for changes
 gulp.task('less-watcher', function () {
     //watch the less file and update the css
-   gulp.watch([config.less],['styles']);
+    gulp.watch([config.less],['styles']);
 });
 //caches the html and minifies it
 gulp.task('templatecache', ['clean-code'], function() {
@@ -141,7 +141,6 @@ gulp.task('templatecache', ['clean-code'], function() {
         ))
         .pipe(gulp.dest(config.temp));
 });
-
 
 /**
  * Wire in bower and Js file dependencies
@@ -159,7 +158,6 @@ gulp.task('wiredep', function() {
         .pipe($.inject(gulp.src(config.js)))
         .pipe(gulp.dest(config.client));
 });
-
 
 /**
  * This methid runs wiredep to inject all the bower and scripts and compiles the customm css
@@ -195,9 +193,9 @@ gulp.task('optimize', ['inject', 'fonts', 'images'], function() {
      * injection annotations with ng-annotate so uglifly does not break
      */
     //filter for the 3rd party libraries
-    const jsLibFilter = $.filter('**/'+config.optimized.lib, {restore: true});
+    const jsLibFilter = $.filter('**/' + config.optimized.lib, {restore: true});
     //filter for the custom js code
-    const jsAppFilter = $.filter('**/'+config.optimized.app, {restore: true});
+    const jsAppFilter = $.filter('**/' + config.optimized.app, {restore: true});
 
     log('Optimizing the Javascript, CSS and HTML');
 
@@ -358,8 +356,6 @@ function startBrowserSync() {
     gulp.watch([config.less], ['styles'])
         .on('change', function(event) { changeEvent(event); });
 
-
-
     browserSync(options);
 }
 function clean(path, done) {
@@ -376,15 +372,15 @@ function clean(path, done) {
 
 }
 function log(msg) {
-    if(typeof(msg) === 'object'){
-        for (var item in msg){
-            if (msg.hasOwnProperty(item)){
+    if (typeof(msg) === 'object') {
+        for (var item in msg) {
+            if (msg.hasOwnProperty(item)) {
                 //setup util message and color
                 $.util.log($.util.colors.blue(msg[item]));
             }
         }
     }
-    else{
+    else {
         //setup util message and color
         $.util.log($.util.colors.blue(msg));
     }

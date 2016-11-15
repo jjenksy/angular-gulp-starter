@@ -1,4 +1,8 @@
 /*jshint node:true*/
+/**
+ * THis is the main node.js app entry point
+ * it serves up the static content and sets up routes to be used
+ */
 'use strict';
 
 var express = require('express');
@@ -12,7 +16,7 @@ var logger = require('morgan');
 var port = process.env.PORT || 7203;
 //so we can use a glob pattern to serve up the build
 //index page because versioning changes the values
-const glob = require("glob");
+const glob = require('glob');
 
 var routes;
 
@@ -48,17 +52,16 @@ switch (environment) {
          * We are using glob here to get the diff version names of the
          * index-*.html page that is being served up our build file
          */
-        glob("./build/*index-*.html",function (er, files) {
-            console.log("Globbed index page " +files[0]);
+        glob('./build/*index-*.html',function (er, files) {
+            console.log('Globbed index page ' + files[0]);
             app.use(express.static('./build/'));
             //set the root path file to serve up
-            app.get('/', function(req, res){
+            app.get('/', function(req, res) {
                 res.sendfile(files[0]);
             });
             startServer();
 
         });
-
 
         break;
     default:

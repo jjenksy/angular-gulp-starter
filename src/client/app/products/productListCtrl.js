@@ -1,24 +1,31 @@
 /**
- * Created by Deb on 8/20/2014.
+ * John Jenkins
  */
 (function () {
-    "use strict";
+    'use strict';
     angular
-        .module("app")
-        .controller("ProductListCtrl",
-                    ["productResource",
-                        ProductListCtrl]);
+        .module('app')
+        .controller('ProductListCtrl',
+            ['productResources',
+                ProductListCtrl]);
 
-    function ProductListCtrl(productResource) {
+    /**
+     * THis controller uses the query from productResource then it is injected in the controller and
+     * returns the data to update the view
+     * @productResource
+     * @constructor
+     */
+    function ProductListCtrl(productResources) {
+        //the view
         var vm = this;
 
-        productResource.query(function(data) {
+        productResources.query(function(data) {
             vm.products = data;
         });
         vm.showImage = false;
 
         vm.toggleImage = function() {
             vm.showImage = !vm.showImage;
-        }
+        };
     }
 }());

@@ -28,46 +28,77 @@
 
 </head>
 <body ng-app="app">
-<div class="panel panel-primary">
-    <div class="panel-heading"
-         style="font-size:large">Product
-        List
+    <nav class="navbar navbar-inverse">
+        <div class="container">
+            <a class="navbar-brand"
+               ng-href="#/">Jenksy Product Management</a>
+            <div class="navbar-header">
+                <button type="button"
+                        class="navbar-toggle"
+                        data-toggle="collapse"
+                        data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a ng-href="#/products">Product List</a></li>
+                    <li><a ng-href="#/productEdit/{{0}})">
+                        <i class="glyphicon glyphicon-plus"></i>
+                        Add Product</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<!--where we inject our view templates-->
+    <div class="container">
+        <!--the view directive for routing-->
+        <div ng-view></div>
     </div>
 
-    <div class="panel-body">
-        <table class="table" ng-controller="ProductListCtrl as vm">
 
-            <thead>
-            <tr>
-                <td>
-                    <button type="button"
-                            class="btn btn-primary"
-                            ng-click="vm.toggleImage()">
-                        {{vm.showImage ? "Hide" : "Show"}} Image
-                    </button>
-                </td>
-                <td>Product</td>
-                <td>Code</td>
-                <td>Available</td>
-                <td>Price</td>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat="product in vm.products">
-                <td>
-                    <img ng-if="vm.showImage"
-                         ng-src="{{product.imageUrl}}"
-                         style="width:50px;margin:2px"
-                         title="{{product.productName}}">
-                </td>
-                <td>{{ product.productName}}</td>
-                <td>{{ product.productCode }}</td>
-                <td>{{ product.releaseDate }}</td>
-                <td>{{ product.price | currency }}</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
+    <!-- build:js js/lib.js -->
+    <!-- bower:js -->
+    <script src="/bower_components/jquery/dist/jquery.js"></script>
+    <script src="/bower_components/angular/angular.js"></script>
+    <script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="/bower_components/moment/moment.js"></script>
+    <script src="/bower_components/toastr/toastr.js"></script>
+    <script src="/bower_components/angular-animate/angular-animate.js"></script>
+    <script src="/bower_components/extras.angular.plus/ngplus-overlay.js"></script>
+    <script src="/bower_components/angular-resource/angular-resource.js"></script>
+    <script src="/bower_components/angular-route/angular-route.js"></script>
+    <!--endbower-->
+    <!--endbuild-->
+
+    <!--build:js js/app.js-->
+    <!-- inject:js -->
+
+        <script src="/src/client/app/app.js"></script>
+
+        <script src="/src/client/app/products/productDetailCtrl.js"></script>
+
+        <script src="/src/client/app/products/productEditCtrl.js"></script>
+
+        <script src="/src/client/app/products/productListCtrl.js"></script>
+
+        <script src="/src/client/app/common/common.service.js"></script>
+
+        <script src="/src/client/app/common/product.resouce.js"></script>
+
+        <script src="/src/client/app/blocks/http/httpRequester.js"></script>
+
+        <script src="/src/client/app/blocks/http/resourceRequester.js"></script>
+
+        <!--endinject-->
+
+       <!-- inject:templates:js -->
+
+        <!--endinject-->
+        <!--endbuild-->
 </body>
 </html>
