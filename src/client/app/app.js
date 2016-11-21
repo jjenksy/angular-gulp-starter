@@ -6,7 +6,7 @@
             'ui.router',
         ]);
 
-    //changing to UI-router from ngroute
+    //changing to UI-router from ngroute test
     app.config(['$stateProvider',
         '$urlRouterProvider',
         function ($stateProvider, $urlRouterProvider) {
