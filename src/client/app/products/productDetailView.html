@@ -49,16 +49,14 @@
         </div>
     </div>
     <div class="panel-footer">
-        <!--link back to product list-->
         <a class="btn btn-default"
-           ng-href="#/products"
+           ui-sref="productList"
            style="width:80px">
             <I class="glyphicon glyphicon-chevron-left"></i>
             Back
         </a>
-        <!--link to edit section-->
         <a class="btn btn-primary"
-           ng-href="productEdit.info({productId: vm.product.productId})"
+           ui-sref="productEdit.info({productId: vm.product.productId})"
            style="width:80px;margin-left:10px">
             Edit
         </a>

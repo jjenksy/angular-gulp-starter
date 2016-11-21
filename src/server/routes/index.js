@@ -49,12 +49,10 @@ module.exports = function(app) {
     function getProduct(req, res) {
         let json = jsonfileservice.getJsonFromFile(data + 'products.json');
         console.log('Hello from get product');
-        let jsonArray = JSON.parse(json);
-        console.log('Hello from get product');
-        jsonArray.forEach(function (element) {
-            console.log(element);
+        let product = json.filter(function(c) {
+            return c.productId === parseInt(req.params.id);
         });
-        // res.send(customer);
+        res.send(product[0]);
     }
 
     /**

@@ -55,8 +55,8 @@
     </nav>
 <!--where we inject our view templates-->
     <div class="container">
-        <!--the view directive for routing-->
-        <div ng-view></div>
+        <!--the view directive for routing with ui-router-->
+        <div ui-view></div>
     </div>
 
 
@@ -72,6 +72,7 @@
     <script src="/bower_components/extras.angular.plus/ngplus-overlay.js"></script>
     <script src="/bower_components/angular-resource/angular-resource.js"></script>
     <script src="/bower_components/angular-route/angular-route.js"></script>
+    <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
     <!--endbower-->
     <!--endbuild-->
 
@@ -80,15 +81,19 @@
 
         <script src="/src/client/app/app.js"></script>
 
+        <script src="/src/client/app/common/common.service.js"></script>
+
+        <script src="/src/client/app/common/product.resouce.js"></script>
+
         <script src="/src/client/app/products/productDetailCtrl.js"></script>
 
         <script src="/src/client/app/products/productEditCtrl.js"></script>
 
         <script src="/src/client/app/products/productListCtrl.js"></script>
 
-        <script src="/src/client/app/common/common.service.js"></script>
+        <script src="/src/client/app/login/login.controller.js"></script>
 
-        <script src="/src/client/app/common/product.resouce.js"></script>
+        <script src="/src/client/app/register/register.controller.js"></script>
 
         <script src="/src/client/app/blocks/http/httpRequester.js"></script>
 

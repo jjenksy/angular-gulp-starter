@@ -9,12 +9,12 @@
     angular
         .module('common.services')
         .factory('productResource',
-            ['$resource',
-                productResource]);
-
-    function productResource($resource) {
-        return $resource('/api/productById/:productId');
-    }
+            ['$resource', function ($resource) {
+            let productResource = function productResource(productById) {
+                return $resource('/api/productById/' + productById);
+            };
+            return productResource;
+        }]);
 
     angular
         .module('common.services')
@@ -27,9 +27,9 @@
     }
     angular
         .module('common.services')
-        .factory('contentPromise', ['productResource', '$route', function (productResource, $route){
+        .factory('contentPromise', ['productResource', '$route', function (productResource, $route) {
         return function() {
-            return productResource.get($route.current.params.productId).$promise;
+            return productResource($route.current.params.productId).get().$promise;
         };
     }]);
 
