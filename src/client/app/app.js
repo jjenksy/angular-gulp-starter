@@ -2,8 +2,11 @@
     'use strict';
     const app = angular.module('app',
         ['common.services',
-            'ngRoute',
             'ui.router',
+            'ui.mask',
+            'ui.bootstrap',
+            'ngAnimate',
+            'toastr'
         ]);
 
     //changing to UI-router from ngroute test
@@ -22,18 +25,22 @@
                     url: '/products',
                     templateUrl: 'app/products/productListView.html',
                     controller: 'ProductListCtrl as vm'
-                })
+                })//parent state for the nested routes
                 .state('productEdit', {
-                    abstract: true,
+                    abstract: true,//this state cannot be activated directly thats what abstract means
                     url: '/products/edit/:productId',
                     templateUrl: 'app/products/productEditView.html',
                     controller: 'ProductEditCtrl as vm',
                     resolve: {
-                        product: ['contentPromise', function (contentPromise) {
-                                                return contentPromise();
-                                            }]
+                        productResource: 'productResource',
+
+                        product: function (productResource, $stateParams) {
+                            var productId = $stateParams.productId;
+                            console.log(productId);
+                            return productResource(productId).get().$promise;
+                        }
                     }
-                })
+                })//nested states for product edit when a nested state is activated the parent state is also activated
                 .state('productEdit.info', {
                     url: '/info',
                     templateUrl: 'app/products/productEditInfoView.html'
@@ -45,7 +52,7 @@
                 .state('productEdit.tags', {
                     url: '/tags',
                     templateUrl: 'app/products/productEditTagsView.html'
-                })
+                })//end nested states for product detail
 
                 .state('productDetail', {
                     url: '/products/:productId',

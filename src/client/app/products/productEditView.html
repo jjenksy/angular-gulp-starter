@@ -4,21 +4,29 @@
     </div>
 
     <div class="panel-body">
+        <!--wizard is a custom class -->
         <div class="wizard">
+            <!--ui-sref activates the appropriate nested state we only have to put
+            the .info because we are in the parent state-->
+            <!--.info activates info-->
             <a ui-sref=".info"
-               ui-sref-active="active">
+               ui-sref-active="active"> <!--ui-sref-active adds the css class when the elem is active -->
                 Basic Information
             </a>
+            <!--ui-sref activates the appropriate nested state-->
+            <!--.price activates price-->
             <a ui-sref=".price"
                ui-sref-active="active">
                 Price Details
             </a>
+            <!--ui-sref activates the appropriate nested state-->
+            <!--.tags activates tags-->
             <a ui-sref=".tags"
                ui-sref-active="active">
                 Search Tags
             </a>
         </div>
-
+        <!--where the nested child templates are injected-->
         <div ui-view></div>
     </div>
 

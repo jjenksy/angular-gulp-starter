@@ -15,8 +15,11 @@ module.exports = function(app) {
     app.get(api + '/products',getProducts);
     app.get(api + '/productById/:id',getProduct);
 
+    //post the data by id to update it
+    app.post(api + '/productById/:id',setProduct);
+
     //post the data
-    app.post(api + '/products',setProduct);
+    app.post(api + '/products',setProducts);
 
     function getCustomer(req, res, next) {
         var json = jsonfileservice.getJsonFromFile(data + 'customers.json');
@@ -57,6 +60,16 @@ module.exports = function(app) {
 
     /**
      * Post the product back to the file
+     */
+    function setProducts(req, res) {
+
+        let json = jsonfileservice.saveJsonToFile(data + 'products.json', req.body);
+        res.send(json);
+    }
+
+    /**
+     * Post the product back to the file
+     * and update the file based on id
      */
     function setProduct(req, res) {
 

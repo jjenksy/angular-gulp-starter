@@ -31,13 +31,18 @@
                          style="width:50px;margin:2px"
                          title="{{product.productName}}">
                 </td>
-                <td><a ng-href="#/products/{{product.productId}}">{{product.productName}}</a></td>
+                <td>
+                    <a ui-sref="productDetail({productId: product.productId})">
+                        {{ product.productName}}</a>
+                </td>
                 <td>{{ product.productCode }}</td>
-                <td>{{ product.releaseDate }}</td>
+                <td>{{ product.releaseDate | date }}</td>
                 <td>{{ product.price | currency }}</td>
                 <td>
+                    <!--this button activates the productEdit.info child state
+                    of the productEdit state and passes it the productId as a json obj-->
                     <a class="btn btn-primary"
-                       ng-href="#/productEdit/{{ product.productId}}">
+                       ui-sref="productEdit.info({productId: product.productId})">
                         Edit
                     </a>
                 </td>

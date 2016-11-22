@@ -16,7 +16,7 @@
     <!-- bower:css -->
     <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.css" />
-    <link rel="stylesheet" href="/bower_components/toastr/toastr.css" />
+    <link rel="stylesheet" href="/bower_components/angular-toastr/dist/angular-toastr.css" />
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -45,8 +45,9 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a ng-href="#/products">Product List</a></li>
-                    <li><a ng-href="#/productEdit/{{0}})">
+                    <li><a ui-sref="productList">Product List</a></li>
+                    <!--activate the productEdit.info child state for productEdit-->
+                    <li><a ui-sref="productEdit.info({productId:0})">
                         <i class="glyphicon glyphicon-plus"></i>
                         Add Product</a></li>
                 </ul>
@@ -67,12 +68,21 @@
     <script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <script src="/bower_components/moment/moment.js"></script>
-    <script src="/bower_components/toastr/toastr.js"></script>
     <script src="/bower_components/angular-animate/angular-animate.js"></script>
     <script src="/bower_components/extras.angular.plus/ngplus-overlay.js"></script>
     <script src="/bower_components/angular-resource/angular-resource.js"></script>
     <script src="/bower_components/angular-route/angular-route.js"></script>
     <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="/bower_components/angular-ui-scroll/dist/ui-scroll.js"></script>
+    <script src="/bower_components/angular-ui-scrollpoint/dist/scrollpoint.js"></script>
+    <script src="/bower_components/angular-ui-event/dist/event.js"></script>
+    <script src="/bower_components/angular-ui-mask/dist/mask.js"></script>
+    <script src="/bower_components/angular-ui-validate/dist/validate.js"></script>
+    <script src="/bower_components/angular-ui-indeterminate/dist/indeterminate.js"></script>
+    <script src="/bower_components/angular-ui-uploader/dist/uploader.js"></script>
+    <script src="/bower_components/angular-ui-utils/index.js"></script>
+    <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="/bower_components/angular-toastr/dist/angular-toastr.tpls.js"></script>
     <!--endbower-->
     <!--endbuild-->
 
@@ -85,15 +95,15 @@
 
         <script src="/src/client/app/common/product.resouce.js"></script>
 
+        <script src="/src/client/app/register/register.controller.js"></script>
+
+        <script src="/src/client/app/login/login.controller.js"></script>
+
         <script src="/src/client/app/products/productDetailCtrl.js"></script>
 
         <script src="/src/client/app/products/productEditCtrl.js"></script>
 
         <script src="/src/client/app/products/productListCtrl.js"></script>
-
-        <script src="/src/client/app/login/login.controller.js"></script>
-
-        <script src="/src/client/app/register/register.controller.js"></script>
 
         <script src="/src/client/app/blocks/http/httpRequester.js"></script>
 

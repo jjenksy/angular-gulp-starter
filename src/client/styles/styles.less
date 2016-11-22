@@ -4,8 +4,31 @@
 @color_warning: #f88529;
 @color_important: #fa3031;
 @color_violet: #935ab6;
+@bg_color_wizard: #efefef;
+@active_selection: #fff;
+@active_selection_bg: #007ACC;
 
 
 body {
     background-color: @color_blue;
 }
+
+//the wizard style class
+//this class is used is the productEdit layouts
+.wizard {
+    a{
+    background: @bg_color_wizard;
+    display: inline-block;
+    margin-right: 5px;
+    min-width: 150px;
+    padding: 10px 40px 10px;
+    position: relative;
+        outline: none;
+        text-decoration: none;
+    }
+    .active{
+        background:@active_selection_bg;
+        color: @active_selection;
+    }
+}
+//end wizard style

@@ -33,6 +33,17 @@ module.exports = function() {
 
         return json;
     }
+    /**
+     * Save new data to the json file
+     * @file
+     * @data
+     */
+    function saveJsonToFile(file, data) {
+        //get the file data
+        let json = setConfig(file, data);
+
+        return json;
+    }
 
     /**
      * Get the file path
@@ -54,8 +65,8 @@ module.exports = function() {
 
     /**
      * Read the json file
-     * @param filepath the path
-     * @param encoding the default encoding
+     * @filepath the path
+     * @encoding the default encoding
      */
     function readJsonFileSync(filepath, encoding) {
         //require the file reader
@@ -82,6 +93,7 @@ module.exports = function() {
         //parse the contents to JSON into javascript
         let config = JSON.parse(file);
         //push the new data into the file
+        console.log(config);
         config.push(data);
         //converts a JavaScript value to a JSON string,
         configJSON = JSON.stringify(config);
