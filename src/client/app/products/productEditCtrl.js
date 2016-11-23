@@ -10,6 +10,7 @@
             ['product', //the param for the function from the resolve feature
                 '$state',
                     'toastr',
+                    'productService',
                 ProductEditCtrl]);
 
     /**
@@ -18,11 +19,36 @@
      * @$state inject the state in the contructor
      * @constructor where the deps are injected
      */
-    function ProductEditCtrl(product, $state, toastr) {
+    function ProductEditCtrl(product, $state, toastr, productService) {
         var vm = this;
 
         //assign the product to the model vm.product the we use in the view
         vm.product = product;
+        vm.priceOption = 'percent';
+
+        //set the margin percent
+        //we use a function here so it will recalculate when price
+        //or cost changes
+        vm.marginPercent = function () {
+            return productService.calculateMarginPercent(vm.product.price,
+            vm.product.cost);
+        };
+
+        /* Calculate the price based on a markup */
+        vm.calculatePrice = function () {
+            var price = 0;
+
+            if (vm.priceOption == 'amount') {
+                price = productService.calculatePriceFromMarkupAmount(
+                    vm.product.cost, vm.markupAmount);
+            }
+
+            if (vm.priceOption == 'percent') {
+                price = productService.calculatePriceFromMarkupPercent(
+                    vm.product.cost, vm.markupPercent);
+            }
+            vm.product.price = price;
+        };
         //if it has and Id the it is existing so title is edit
         if (vm.product && vm.product.productId) {
             vm.title = 'Edit: ' + vm.product.productName;
@@ -41,8 +67,12 @@
             console.log(vm.opened);
         };
 
-        vm.submit = function () {
-            toastr.success('Save Successful');
+        vm.submit = function (isValid) {
+            if (isValid) {
+                toastr.success('Save Successful');
+            }else {
+                toastr.error('Save Error');
+            }
             //todo uncomment this to save the data to the server not saving now so it want refresh
             // vm.product.$save(function (data) {
             //         toastr.success('Save Successful');
