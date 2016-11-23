@@ -44,13 +44,16 @@
                 </button>
             </div>
             <div class="navbar-collapse collapse">
+                <!--navBar section---------------------------------------------------------------->
                 <ul class="nav navbar-nav">
                     <li><a ui-sref="productList">Product List</a></li>
                     <!--activate the productEdit.info child state for productEdit-->
                     <li><a ui-sref="productEdit.info({productId:0})">
                         <i class="glyphicon glyphicon-plus"></i>
                         Add Product</a></li>
+                    <li><a ui-sref="priceAnalytics">Price Analytics</a> </li>
                 </ul>
+                <!--end nav bar-->
             </div>
         </div>
     </nav>
@@ -83,6 +86,8 @@
     <script src="/bower_components/angular-ui-utils/index.js"></script>
     <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
     <script src="/bower_components/angular-toastr/dist/angular-toastr.tpls.js"></script>
+    <script src="/bower_components/d3/d3.js"></script>
+    <script src="/bower_components/angular-charts/dist/angular-charts.js"></script>
     <!--endbower-->
     <!--endbuild-->
 
@@ -97,13 +102,15 @@
 
         <script src="/src/client/app/common/productService.js"></script>
 
+        <script src="/src/client/app/login/login.controller.js"></script>
+
+        <script src="/src/client/app/price/priceAnalyticsCtrl.js"></script>
+
         <script src="/src/client/app/products/productDetailCtrl.js"></script>
 
         <script src="/src/client/app/products/productEditCtrl.js"></script>
 
         <script src="/src/client/app/products/productListCtrl.js"></script>
-
-        <script src="/src/client/app/login/login.controller.js"></script>
 
         <script src="/src/client/app/register/register.controller.js"></script>
 

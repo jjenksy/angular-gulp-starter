@@ -6,7 +6,8 @@
             'ui.mask',
             'ui.bootstrap',
             'ngAnimate',
-            'toastr'
+            'toastr',
+            'angularCharts'
         ]);
 
     //changing to UI-router from ngroute test
@@ -65,6 +66,18 @@
                             var productId = $stateParams.productId;
                             console.log(productId);
                             return productResource(productId).get().$promise;
+                        }
+                    }
+                })
+                .state('priceAnalytics',{
+                    url: '/price',
+                    templateUrl: 'app/price/priceAnalyticsView.html',
+                    contoller:'PriceAnalyticsCtrl',
+                    resolve: {//todo fix the resolve
+                        productResource: 'productResource',
+                        //resolve all the product data before navigating to the view
+                        product: function (productResource) {
+                            return productResource.query().$promise;
                         }
                     }
                 });
