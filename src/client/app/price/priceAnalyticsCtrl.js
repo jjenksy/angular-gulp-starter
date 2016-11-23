@@ -1,5 +1,6 @@
 /**
- * Created by Deb on 9/4/2014.
+ * john jenkins
+ * todo look inot another charting option
  */
 (function () {
     'use strict';
@@ -17,7 +18,7 @@
         $scope.title = 'Price Analytics';
 
         // Computed property
-        for (var i = 0; i < products.length; i++) {
+        for (let i = 0; i < products.length; i++) {
             products[i].marginPercent =
                 productService.calculateMarginPercent(products[i].price,
                                                         products[i].cost);

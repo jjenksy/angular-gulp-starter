@@ -74,10 +74,10 @@
                     templateUrl: 'app/price/priceAnalyticsView.html',
                     contoller:'PriceAnalyticsCtrl',
                     resolve: {//todo fix the resolve
-                        productResource: 'productResource',
+                        productResource: 'productResources',
                         //resolve all the product data before navigating to the view
-                        product: function (productResource) {
-                            return productResource.query().$promise;
+                        product: function (productResources) {
+                            return productResources.query().$promise;
                         }
                     }
                 });
