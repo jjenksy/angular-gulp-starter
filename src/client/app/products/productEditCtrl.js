@@ -21,7 +21,7 @@
      */
     function ProductEditCtrl(product, $state, toastr, productService) {
         var vm = this;
-
+        console.log('ProductEditCtrl');
         //assign the product to the model vm.product the we use in the view
         vm.product = product;
         vm.priceOption = 'percent';
