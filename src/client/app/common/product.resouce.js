@@ -33,4 +33,14 @@
         };
     }]);
 
+    angular
+        .module('common.services')
+        .factory('getResource',
+            ['$resource', function ($resource) {
+                let getResource = function (link) {
+                    return $resource(link);
+                };
+                return getResource;
+            }]);
+
 }());

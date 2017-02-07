@@ -6,7 +6,7 @@
     angular
         .module('app')
         .controller('ProductListCtrl',
-            ['productResources',
+            ['productResources','getResource',
                 ProductListCtrl]);
 
     /**
@@ -15,13 +15,17 @@
      * @productResource
      * @constructor
      */
-    function ProductListCtrl(productResources) {
+    function ProductListCtrl(productResources,getResource) {
         //the view
         var vm = this;
 
         productResources.query(function(data) {
             vm.products = data;
         });
+        // getResource('localhost/test').get(function (data) {
+        //     console.log(data);
+        // });
+
         vm.showImage = false;
 
         vm.toggleImage = function() {

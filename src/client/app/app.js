@@ -7,6 +7,7 @@
             'ui.bootstrap',
             'ngAnimate',
             'toastr',
+            'dndLists',
             'angularCharts'
         ]);
 
@@ -49,6 +50,11 @@
                 .state('productEdit.price', {
                     url: '/price',
                     templateUrl: 'app/products/productEditPriceView.html'
+                })
+                .state('dragAndDrop', {
+                    url: '/dragAndDropCtlr',
+                    templateUrl: 'app/dragandrop/draganddrop.view.html',
+                    controller: 'DragAndDropCtlr as vm'
                 })
                 .state('productEdit.tags', {
                     url: '/tags',
